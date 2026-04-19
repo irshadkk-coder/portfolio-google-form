@@ -22,40 +22,31 @@ export default function Contact() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-const handleSubmit = async (e: FormEvent) => {
+const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
 
   if (!formData.name || !formData.email || !formData.message) {
-    toast.error('Please fill in all fields.');
+    alert("Fill all fields");
     return;
   }
-
-  setIsSubmitting(true);
+  
+  setIsSubmitting(true)
 
   try {
-    const form = new FormData();
+    await fetch("http://localhost:5000/contact", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
 
-    form.append("entry.1150793560", formData.name);
-    form.append("entry.1442668775", formData.email);
-    form.append("entry.589696117", formData.message);
-
-    await fetch(
-      "https://docs.google.com/forms/d/e/1FAIpQLSevjjuApPqiu2RE96V68bfUK7Y7lTcy23zIZgTTrbg5wUpJtw/formResponse",
-      {
-        method: "POST",
-        mode: "no-cors",
-        body: form,
-      }
-    );
-
-    toast.success("Message sent successfully! I'll get back to you soon.");
-
-    setFormData({ name: '', email: '', message: '' });
+    alert("Message sent!");
+    setFormData({ name: "", email: "", message: "" });
   } catch (error) {
-    toast.error("Something went wrong!");
+    alert("Error sending message");
   }
-
-  setIsSubmitting(false);
+  setIsSubmitting(false)
 };
   return (
     <SectionWrapper id="contact" className="bg-slate-100/50 dark:bg-slate-900/50">
